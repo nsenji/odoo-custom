@@ -1,0 +1,115 @@
+from odoo import models, fields
+from odoo.exceptions import UserError, ValidationError
+from collections import defaultdict
+from datetime import datetime
+from dateutil.relativedelta import relativedelta
+from pytz import timezone
+
+from markupsafe import escape, Markup
+from werkzeug.urls import url_encode
+
+from odoo import api, fields, models, _
+from odoo.osv import expression
+from odoo.tools import format_amount, format_date, formatLang, groupby
+from odoo.tools.float_utils import float_is_zero
+from odoo.exceptions import UserError, ValidationError
+
+
+class CustomPurchaseOrder(models.Model):
+    _inherit = "purchase.order"
+
+    vendor_ids = fields.Many2many(
+        "res.partner",
+        string="Vendor(s)",
+        required=True,
+        domain=[('supplier_rank', '>', 0)],
+
+        change_default=True,
+        tracking=True,
+        check_company=True,
+    )
+
+
+    @api.onchange('vendor_ids')
+    def onchange_vendor_ids(self):
+        if self.vendor_ids:
+            self.partner_id = self.vendor_ids[:1].id
+            self.fiscal_position_id = self.env['account.fiscal.position']._get_fiscal_position(self.vendor_ids[:1])
+            self.payment_term_id = self.vendor_ids[:1].property_supplier_payment_term_id.id
+            self.currency_id = self.vendor_ids[:1].property_purchase_currency_id.id or self.env.company.currency_id.id
+        else:
+            self.fiscal_position_id = False
+            self.payment_term_id = False
+            self.currency_id = self.env.company.currency_id.id
+
+    
+    
+    def action_rfq_send(self):
+        self.ensure_one()
+        if not self.vendor_ids:
+            raise UserError(_("Please select at least one vendor."))
+
+        ir_model_data = self.env["ir.model.data"]
+        
+        
+        try:
+            if self.env.context.get("send_rfq", False):
+                template_id = ir_model_data._xmlid_lookup(
+                    "custom_purchases.email_template_edi_purchase_custom"
+                )[1]
+            else:
+                template_id = ir_model_data._xmlid_lookup(
+                    "purchase.email_template_edi_purchase_done"
+                )[1]
+        except ValueError:
+            template_id = False
+
+        try:
+            compose_form_id = ir_model_data._xmlid_lookup(
+                "mail.email_compose_message_wizard_form"
+            )[1]
+        except ValueError:
+            compose_form_id = False
+
+        ctx = dict(self.env.context or {})
+        ctx.update(
+            {
+                "default_model": "purchase.order",
+                "default_res_ids": self.ids,
+                "default_template_id": template_id,
+                "default_composition_mode": "comment",
+                "default_email_layout_xmlid": "mail.mail_notification_layout_with_responsible_signature",
+                "force_email": True,
+                "mark_rfq_as_sent": True,
+                "vendor_ids": self.vendor_ids.ids,
+            }
+        )
+
+        lang = self.env.context.get("lang")
+        if {"default_template_id", "default_model", "default_res_id"} <= ctx.keys():
+            template = self.env["mail.template"].browse(ctx["default_template_id"])
+            if template and template.lang:
+                lang = template._render_lang([ctx["default_res_id"]])[
+                    ctx["default_res_id"]
+                ]
+
+        self = self.with_context(lang=lang)
+        if self.state in ["draft", "sent"]:
+            ctx["model_description"] = _("Custom Request for Quotation")
+        else:
+            ctx["model_description"] = _("Purchase Order")
+
+    
+        return {
+            "name": _("Compose Email"),
+            "type": "ir.actions.act_window",
+            "view_mode": "form",
+            "res_model": "mail.compose.message",
+            "views": [(compose_form_id, "form")],
+            "view_id": compose_form_id,
+            "target": "new",
+            "context": ctx,
+        }
+        
+    
+    

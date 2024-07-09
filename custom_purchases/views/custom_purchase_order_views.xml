@@ -1,0 +1,41 @@
+<!-- custom_purchase_order_views.xml -->
+
+<odoo>
+    <record id="custom_purchase_order" model="ir.ui.view">
+        <field name="name">custom.purchase.order</field>
+        <field name="model">purchase.order</field>
+        <field name="inherit_id" ref="purchase.purchase_order_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='partner_id']" position="after">
+                <field name="vendor_ids" widget="many2many_tags" options="{'no_create': True}" context="{'res_partner_search_mode': 'supplier', 'show_vat': True}" placeholder="Name, TIN, Email, or Reference" readonly="state in ['cancel', 'done', 'purchase']"/>
+            </xpath>
+            <xpath expr="//field[@name='partner_id']" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath>
+
+        </field>
+    </record>
+
+    <record id="custom_purchase_order_kpis_tree" model="ir.ui.view">
+        <field name="name">custom.purchase.order.kpis.tree</field>
+        <field name="model">purchase.order</field>
+        <field name="inherit_id" ref="purchase.purchase_order_kpis_tree"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='partner_id']" position="replace">
+                <field name="vendor_ids" widget="many2many_tags"/>
+            </xpath>     
+        </field>
+    </record>
+    <record id="custom_purchase_order_tree" model="ir.ui.view">
+        <field name="name">custom.purchase.order.tree</field>
+        <field name="model">purchase.order</field>
+        <field name="inherit_id" ref="purchase.purchase_order_tree"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='partner_id']" position="replace">
+                <field name="vendor_ids" widget="many2many_tags"/>
+            </xpath>     
+        </field>
+    </record>
+
+
+</odoo>
