@@ -7,10 +7,13 @@
         <field name="inherit_id" ref="purchase.purchase_order_form"/>
         <field name="arch" type="xml">
             <xpath expr="//field[@name='partner_id']" position="after">
-                <field name="vendor_ids" widget="many2many_tags" options="{'no_create': True}" context="{'res_partner_search_mode': 'supplier', 'show_vat': True}" placeholder="Name, TIN, Email, or Reference" readonly="state in ['cancel', 'done', 'purchase']"/>
+                <field name="vendor_ids" widget="many2many_tags" options="{'no_create': True}" context="{'res_partner_search_mode': 'supplier', 'show_vat': True}" placeholder="Name, TIN, Email, or Reference" readonly="state in ['cancel', 'done', 'purchase']" invisible="state in ('sent','done','to approve')"/>
             </xpath>
             <xpath expr="//field[@name='partner_id']" position="attributes">
                 <attribute name="invisible">1</attribute>
+            </xpath>
+            <xpath expr="//field[@name='partner_id']" position="after">
+                <field name="best_bid_vendor_id" widget="res_partner_many2one" options="{'no_create': True, 'no_open': True}" domain="[('id', 'in', vendor_ids)]" invisible="state in ('draft', 'purchase', 'cancel')"/>
             </xpath>
 
         </field>
@@ -23,7 +26,7 @@
         <field name="arch" type="xml">
             <xpath expr="//field[@name='partner_id']" position="replace">
                 <field name="vendor_ids" widget="many2many_tags"/>
-            </xpath>     
+            </xpath>
         </field>
     </record>
     <record id="custom_purchase_order_tree" model="ir.ui.view">
@@ -33,7 +36,7 @@
         <field name="arch" type="xml">
             <xpath expr="//field[@name='partner_id']" position="replace">
                 <field name="vendor_ids" widget="many2many_tags"/>
-            </xpath>     
+            </xpath>
         </field>
     </record>
 

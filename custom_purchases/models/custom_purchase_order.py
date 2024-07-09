@@ -22,36 +22,59 @@ class CustomPurchaseOrder(models.Model):
         "res.partner",
         string="Vendor(s)",
         required=True,
-        domain=[('supplier_rank', '>', 0)],
-
+        domain=[("supplier_rank", ">", 0)],
         change_default=True,
         tracking=True,
         check_company=True,
     )
 
+    best_bid_vendor_id = fields.Many2one(
+        "res.partner",
+        string="Vendor Best Bid",
+        tracking=True,
+        check_company=True,
+        domain=[("supplier_rank", ">", 0)],
+        change_default=True,
+    )
 
-    @api.onchange('vendor_ids')
+    @api.onchange("best_bid_vendor_id")
+    def _onchange_best_bid_vendor_id(self):
+        if self.best_bid_vendor_id:
+            self.partner_id = self.best_bid_vendor_id.id
+            self.vendor_ids = [(6, 0, [self.best_bid_vendor_id.id])]
+
+    def button_confirm(self):
+        if not self.best_bid_vendor_id:
+            raise UserError(_("Please select vendor with the best bid"))
+
+        super().button_confirm()
+
+    @api.onchange("vendor_ids")
     def onchange_vendor_ids(self):
         if self.vendor_ids:
             self.partner_id = self.vendor_ids[:1].id
-            self.fiscal_position_id = self.env['account.fiscal.position']._get_fiscal_position(self.vendor_ids[:1])
-            self.payment_term_id = self.vendor_ids[:1].property_supplier_payment_term_id.id
-            self.currency_id = self.vendor_ids[:1].property_purchase_currency_id.id or self.env.company.currency_id.id
+            self.fiscal_position_id = self.env[
+                "account.fiscal.position"
+            ]._get_fiscal_position(self.vendor_ids[:1])
+            self.payment_term_id = self.vendor_ids[
+                :1
+            ].property_supplier_payment_term_id.id
+            self.currency_id = (
+                self.vendor_ids[:1].property_purchase_currency_id.id
+                or self.env.company.currency_id.id
+            )
         else:
             self.fiscal_position_id = False
             self.payment_term_id = False
             self.currency_id = self.env.company.currency_id.id
 
-    
-    
     def action_rfq_send(self):
         self.ensure_one()
         if not self.vendor_ids:
             raise UserError(_("Please select at least one vendor."))
 
         ir_model_data = self.env["ir.model.data"]
-        
-        
+
         try:
             if self.env.context.get("send_rfq", False):
                 template_id = ir_model_data._xmlid_lookup(
@@ -99,7 +122,6 @@ class CustomPurchaseOrder(models.Model):
         else:
             ctx["model_description"] = _("Purchase Order")
 
-    
         return {
             "name": _("Compose Email"),
             "type": "ir.actions.act_window",
@@ -110,6 +132,3 @@ class CustomPurchaseOrder(models.Model):
             "target": "new",
             "context": ctx,
         }
-        
-    
-    
