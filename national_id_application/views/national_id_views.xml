@@ -7,9 +7,10 @@
         <field name="name">National ID Applications</field>
         <field name="res_model">national.id.application</field>
         <field name="view_mode">tree,form</field>
+        <field name="context">{'create': False}</field>
         <field name="help" type="html">
             <p class="o_view_nocontent_smiling_face">
-                Create your first National ID Application!
+                No National ID applications Found!
             </p>
         </field>
     </record>
@@ -21,14 +22,55 @@
         <field name="name">national.id.application.tree</field>
         <field name="model">national.id.application</field>
         <field name="arch" type="xml">
-            <tree>
+            <tree create='false' edit='false'>
                 <field name="name"/>
                 <field name="email"/>
                 <field name="dob"/>
+                <field name="place_of_birth"/>
                 <field name="gender"/>
                 <field name="state"/>
             </tree>
         </field>
     </record>
+
+    <record id="view_national_id_application_form" model="ir.ui.view">
+        <field name="name">national.id.application.form</field>
+        <field name="model">national.id.application</field>
+        <field name="arch" type="xml">
+            <form string="National ID Application" create="false" edit="false" delete="false">
+                <sheet>
+                    <div class="oe_title">
+                        <h1>
+                            <field name="name" readonly="1"/>
+                        </h1>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="email" readonly="1"/>
+                            <field name="dob" readonly="1"/>
+                            <field name="place_of_birth" readonly="1"/>
+                            <field name="gender" readonly="1"/>
+                        </group>
+                        <group>
+                            <field name="address" readonly="1"/>
+                            <field name="state" readonly="1"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Attachments">
+                            <group>
+                                <field name="photo" readonly="1" widget="image" class="oe_avatar"/>
+                                <field name="lc_reference_letter" readonly="1" widget="binary" />
+                            </group>
+                        </page>
+                    </notebook>
+                </sheet>
+                <div class="oe_chatter">
+                    <field name="message_follower_ids" widget="mail_followers"/>
+                    <field name="message_ids" widget="mail_thread"/>
+                </div>
+            </form>
+        </field>
+    </record>b
 
 </odoo>

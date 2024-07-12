@@ -14,7 +14,7 @@ class NationalIDApplication(models.Model):
     address = fields.Text(string='Address', required=True)
     photo = fields.Binary(string='Applicant Photo', attachment=True)
     lc_reference_letter = fields.Binary(string='LC Reference Letter', attachment=True)
-    state = fields.Selection([('draft', 'Draft'), ('first_approval', 'First Approval'), ('second_approval', 'Second Approval'), ('approved', 'Approved'), ('rejected', 'Rejected')], string='State', default='draft', tracking=True)
+    state = fields.Selection([('draft', 'Draft'), ('first_approval', 'First Approval'), ('second_approval', 'Second Approval'), ('approved', 'Approved'), ('rejected', 'Rejected')], string='State', default='first_approval', tracking=True)
 
     def action_stage1(self):
         self.state = 'stage1'
