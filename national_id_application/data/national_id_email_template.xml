@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        <record id="email_template_national_id_approval" model="mail.template">
+            <field name="name">National ID: Application Approved</field>
+            <field name="model_id" ref="national_id_application.model_national_id_application"/>
+            <field name="subject">Your National ID Application has been Approved</field>
+            <field name="email_to">{{ object.email }}</field>
+            <field name="description">Sent automatically to applicant when their National ID application is approved</field>
+            <field name="body_html" type="html">
+                <div style="margin: 0px; padding: 0px;">
+                    <p style="margin: 0px; padding: 0px; font-size: 13px;">
+                        Dear <t t-out="object.name or ''">Applicant</t>,
+                        <br/>
+                        <br/>
+                        We are pleased to inform you that your National ID Application with reference number <span style="font-weight:bold;" t-out="object.name or ''">NID00001</span> has been approved.
+                        <br/>
+                        <br/>
+                        Application Details:
+                        <br/>
+                        - Name: <t t-out="object.name or ''">John Doe</t>
+                        <br/>
+                        - Date of Birth: <t t-out="object.dob or ''">1990-01-01</t>
+                        <br/>
+                        <br/>
+                        Next Steps:
+                        Please visit our nearest office with this approval notification and your original documents for final verification and to collect your National ID card.
+                        <br/>
+                        <br/>
+                        If you have any questions, please do not hesitate to contact us.
+                        <br/>
+                        <br/>
+                        Best regards,
+                        <br/>
+                        National ID Authority
+                    </p>
+                </div>
+            </field>
+            <field name="auto_delete" eval="True"/>
+        </record>
+
+
+        <record id="email_template_national_id_rejection" model="mail.template">
+            <field name="name">National ID: Application Rejected</field>
+            <field name="model_id" ref="national_id_application.model_national_id_application"/>
+            <field name="subject">Your National ID Application has been Rejected</field>
+            <field name="email_to">{{ object.email }}</field>
+            <field name="description">Sent automatically to applicant when their National ID application is rejected</field>
+            <field name="body_html" type="html">
+                <div style="margin: 0px; padding: 0px;">
+                    <p style="margin: 0px; padding: 0px; font-size: 13px;">
+                        Dear <t t-out="object.name or ''">Applicant</t>,
+                        <br/>
+                        <br/>
+                        We are sorry to inform you that your National ID Application with reference number <span style="font-weight:bold;" t-out="object.name or ''">NID00001</span> has been rejected.
+                        <br/>
+                        <br/>
+                        Application Details:
+                        <br/>
+                        - Name: <t t-out="object.name or ''">John Doe</t>
+                        <br/>
+                        - Date of Birth: <t t-out="object.dob or ''">1990-01-01</t>
+                        <br/>
+                        <br/>
+                        Next Steps:
+                        You need to provide the correct information as you apply for a National ID card.
+                        <br/>
+                        <br/>
+                        If you have any questions, please do not hesitate to contact us.
+                        <br/>
+                        <br/>
+                        Best regards,
+                        <br/>
+                        National ID Authority
+                    </p>
+                </div>
+            </field>
+            <field name="auto_delete" eval="True"/>
+        </record>
+    </data>
+</odoo>

@@ -42,6 +42,8 @@
                     <button name="action_first_approval" invisible="state != 'pending'" string="Approve" type="object" class="oe_highlight" />
                     <button name="action_second_approval" invisible="state != 'stage_1'" string="Approve" type="object" class="oe_highlight" />
                     <button name="reject_application" invisible="state not in ('stage_1','pending')" string="Reject" type="object"/>
+                    <button name="send_email" context="{'send_approval':True}" invisible="state != 'approved'" string="Send Email" type="object" class="oe_highlight" />
+                    <button name="send_email" context="{'send_approval':False}" invisible="state != 'rejected'" string="Send Email" type="object" class="oe_highlight" />
 
                     <field name="state" widget="statusbar" statusbar_visible="pending,stage_1,approved" readonly="1"/>
                 </header>
