@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <odoo>
-    <menuitem id="menu_national_id_root" name="National ID"  web_icon="national_id_application,static/description/icon.png" sequence="135"/>
+    <menuitem id="menu_national_id_root" name="National ID" web_icon="national_id_application,static/description/icon.png" sequence="135"/>
 
     <record id="action_national_id_application" model="ir.actions.act_window">
         <field name="name">National ID Applications</field>
@@ -22,13 +22,13 @@
         <field name="name">national.id.application.tree</field>
         <field name="model">national.id.application</field>
         <field name="arch" type="xml">
-            <tree create='false' edit='false'>
-                <field name="name"/>
+            <tree create='false' edit='false' decoration-info="state not in ['approved']" decoration-muted="state=='rejected'" sample="1">
+                <field name="name" decoration-bf="1"/>
                 <field name="email"/>
                 <field name="dob"/>
                 <field name="place_of_birth"/>
                 <field name="gender"/>
-                <field name="state"/>
+                <field name="state" widget="badge" decoration-success="state == 'approved'" decoration-warning="state == 'pending'" decoration-info="state in ['stage_1']" />
             </tree>
         </field>
     </record>
@@ -38,6 +38,13 @@
         <field name="model">national.id.application</field>
         <field name="arch" type="xml">
             <form string="National ID Application" create="false" edit="false" delete="false">
+                <header>
+                    <button name="action_first_approval" invisible="state != 'pending'" string="Approve" type="object" class="oe_highlight" />
+                    <button name="action_second_approval" invisible="state != 'stage_1'" string="Approve" type="object" class="oe_highlight" />
+                    <button name="reject_application" invisible="state not in ('stage_1','pending')" string="Reject" type="object"/>
+
+                    <field name="state" widget="statusbar" statusbar_visible="pending,stage_1,approved" readonly="1"/>
+                </header>
                 <sheet>
                     <div class="oe_title">
                         <h1>
