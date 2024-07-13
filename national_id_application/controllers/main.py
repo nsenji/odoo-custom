@@ -4,7 +4,7 @@ import base64
 
 class NationalIDController(http.Controller):
 
-    @http.route('/apply', type='http', auth='public', website=True)
+    @http.route('/', type='http', auth='public', website=True)
     def national_id_form(self, **kw):
         return request.render("national_id_application.national_id_form_template", {})
 

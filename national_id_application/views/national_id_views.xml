@@ -68,7 +68,7 @@
                     <notebook>
                         <page string="Attachments">
                             <group>
-                                <field name="photo" readonly="1" widget="image" class="oe_avatar"/>
+                                <field name="photo" readonly="1" widget="binary"/>
                                 <field name="lc_reference_letter" readonly="1" widget="binary" />
                             </group>
                         </page>

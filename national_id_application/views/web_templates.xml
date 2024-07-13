@@ -41,9 +41,9 @@
                     </div>
                     <div class="form-group">
                         <label for="lc_reference_letter">LC Reference Letter</label>
-                        <input type="file" class="form-control-file mb-6" id="lc_reference_letter" name="lc_reference_letter" required="required"/>
+                        <input type="file" class="form-control-file mb-5" id="lc_reference_letter" name="lc_reference_letter" required="required"/>
                     </div>
-                    <button type="submit" class="btn btn-primary mb-6">Submit Application</button>
+                    <button type="submit" class="btn btn-primary mb-5">Submit Application</button>
                 </form>
             </div>
         </t>
@@ -51,7 +51,7 @@
 
     <template id="application_submitted" name="Application Submitted Successfully">
         <t t-call="website.layout">
-            <div class="container mt-10 mb-10">
+            <div class="container mt-5 mb-5">
                 <div class="alert alert-success" role="alert">
                     <h4 class="alert-heading">Application Submitted Successfully!</h4>
                     <p>Thank you for submitting your National ID application. Your application has been received and is being processed.</p>
