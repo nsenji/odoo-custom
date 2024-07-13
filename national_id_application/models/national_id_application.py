@@ -32,11 +32,9 @@ class NationalIDApplication(models.Model):
 
     def action_first_approval(self):
         self.write({"state": "stage_1"})
-        # self.message_post(body='Moved to Stage 1')
 
     def action_second_approval(self):
         self.write({"state": "approved"})
-
 
     def reject_application(self):
         self.write({"state": "rejected"})
