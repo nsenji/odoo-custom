@@ -7,7 +7,7 @@
 A national ID application platform
     """,
     "category": "National Id",
-    "website": "",
+    
     "depends": ['base', 'mail', 'website'],
     "data": [
        'views/national_id_views.xml',
@@ -16,10 +16,8 @@ A national ID application platform
        'security/national_id_security.xml',
        'data/national_id_email_template.xml'
     ],
-    "demo": [],
+    
     "installable": True,
     "application": True,
-    "post_init_hook": "",
-    "assets": {},
     "license": "LGPL-3",
 }

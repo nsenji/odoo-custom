@@ -1,17 +1,7 @@
 from odoo import models, fields
 from odoo.exceptions import UserError, ValidationError
-from collections import defaultdict
-from datetime import datetime
-from dateutil.relativedelta import relativedelta
-from pytz import timezone
-
-from markupsafe import escape, Markup
-from werkzeug.urls import url_encode
-
 from odoo import api, fields, models, _
-from odoo.osv import expression
-from odoo.tools import format_amount, format_date, formatLang, groupby
-from odoo.tools.float_utils import float_is_zero
+
 from odoo.exceptions import UserError, ValidationError
 
 
@@ -23,7 +13,6 @@ class CustomPurchaseOrder(models.Model):
         string="Vendor(s)",
         required=True,
         domain=[("supplier_rank", ">", 0)],
-        change_default=True,
         tracking=True,
         check_company=True,
     )
@@ -34,7 +23,6 @@ class CustomPurchaseOrder(models.Model):
         tracking=True,
         check_company=True,
         domain=[("supplier_rank", ">", 0)],
-        change_default=True,
     )
 
     @api.onchange("best_bid_vendor_id")

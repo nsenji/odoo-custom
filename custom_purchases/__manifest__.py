@@ -15,10 +15,7 @@ This module customises the purchases module to add a few missing functionalities
         "views/custom_purchase_order_views.xml",
         "data/custom_purchase_email_template.xml"
     ],
-    "demo": [],
     "installable": True,
     "application": True,
-    "post_init_hook": "",
-    "assets": {},
     "license": "LGPL-3",
 }
