@@ -83,7 +83,7 @@ class NationalIDApplication(models.Model):
                 ]
 
         self = self.with_context(lang=lang)
-       
+
         return {
             "name": _("Compose Email"),
             "type": "ir.actions.act_window",
