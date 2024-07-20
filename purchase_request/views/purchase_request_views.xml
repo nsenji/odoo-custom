@@ -57,10 +57,11 @@
                             <field name="requester_id"/>
                             <field name="department_id"/>
                             <field name="date_request"/>
-                            <field name="date_required"/>
+                            <field name="vendor_ids" widget="many2many_tags" options="{'no_create': True}" context="{'res_partner_search_mode': 'supplier', 'show_vat': True}" placeholder="Name, TIN, Email, or Reference" invisible="state != 'approved'"/>
                         </group>
                         <group>
-                            <field name="total_amount"/>
+                            <field name="date_required"/>
+                            <field name="description"/>
                             <field name="currency_id"/>
                         </group>
                     </group>
@@ -76,12 +77,9 @@
                                     <field name="subtotal"/>
                                 </tree>
                             </field>
-                            <button name="action_add_product" string="Add a product" type="object" class="btn-link"/>
 
                         </page>
-                        <page string="Description">
-                            <field name="description"/>
-                        </page>
+                        
                     </notebook>
                 </sheet>
                 <div class="oe_chatter">
