@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<odoo>
+
+    <menuitem id="menu_purchase_request_root" name="Purchase Request" web_icon="purchase_request,static/description/icon.png" sequence="135"/>
+
+    <record id="action_purchase_request" model="ir.actions.act_window">
+        <field name="name">Purchase Requests</field>
+        <field name="res_model">purchase.request</field>
+        <field name="view_mode">tree,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                No Purchase Requests Found!
+            </p>
+        </field>
+    </record>
+
+    <menuitem id="menu_purchase_request" name="Purchase requests" parent="menu_purchase_request_root" action="action_purchase_request" sequence="1"/>
+
+    <record id="view_purchase_request_tree" model="ir.ui.view">
+        <field name="name">purchase.request.tree</field>
+        <field name="model">purchase.request</field>
+        <field name="arch" type="xml">
+            <tree string="Purchase Requests" decoration-info="state == 'draft'" decoration-muted="state == 'rejected'" decoration-success="state == 'approved'" create="1">
+                <field name="name"/>
+                <field name="requester_id"/>
+                <field name="department_id"/>
+                <field name="date_request"/>
+                <field name="date_required"/>
+                <field name="total_amount"/>
+                <field name="currency_id"/>
+                <field name="state"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="view_purchase_request_form" model="ir.ui.view">
+        <field name="name">purchase.request.form</field>
+        <field name="model">purchase.request</field>
+        <field name="arch" type="xml">
+            <form string="Purchase Request">
+                <header>
+                    <button name="action_make_request" string="Request" type="object" class="oe_highlight" invisible="state != 'draft'" />
+                    <button name="action_approve" string="Approve" type="object" class="oe_highlight" invisible="state != 'sent'"/>
+                    <button name="action_reject" string="Reject" type="object" invisible="state != 'sent'"/>
+                    <button name="action_create_rfq" string="Create RFQ" type="object" invisible="state != 'approved'"/>
+                    <field name="state" widget="statusbar" statusbar_visible="draft,sent,approved,rfq_created" readonly="1"/>
+                </header>
+                <sheet>
+                    <div class="oe_title">
+                        <h1>
+                            <field name="name" readonly="1"/>
+                        </h1>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="requester_id"/>
+                            <field name="department_id"/>
+                            <field name="date_request"/>
+                            <field name="date_required"/>
+                        </group>
+                        <group>
+                            <field name="total_amount"/>
+                            <field name="currency_id"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Products">
+                            <field name="line_ids" widget="section_and_note_one2many">
+                                <tree editable="bottom">
+                                    <field name="product_id"/>
+                                    <field name="description"/>
+                                    <field name="quantity"/>
+                                    <field name="uom_id"/>
+                                    <field name="price_unit"/>
+                                    <field name="subtotal"/>
+                                </tree>
+                            </field>
+                            <button name="action_add_product" string="Add a product" type="object" class="btn-link"/>
+
+                        </page>
+                        <page string="Description">
+                            <field name="description"/>
+                        </page>
+                    </notebook>
+                </sheet>
+                <div class="oe_chatter">
+                    <field name="message_follower_ids" widget="mail_followers"/>
+                    <field name="activity_ids" widget="mail_activity"/>
+                    <field name="message_ids" widget="mail_thread"/>
+                </div>
+            </form>
+        </field>
+    </record>
+
+</odoo>

@@ -13,7 +13,6 @@ A national ID application platform
        'views/national_id_views.xml',
        'views/web_templates.xml',
        'security/ir.model.access.csv',
-       'security/national_id_security.xml',
        'data/national_id_email_template.xml'
     ],
     

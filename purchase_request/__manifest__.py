@@ -10,7 +10,8 @@ A module for requesting purhcases
     
     "depends": ['base', 'mail', 'purchase'],
     "data": [
-    
+        'security/ir.model.access.csv',
+        'views/purchase_request_views.xml'
     ],
     
     "installable": True,
