@@ -13,7 +13,10 @@ This module customises the purchases module to add a few missing functionalities
     "depends": ["purchase", "mail"],
     "data": [
         "views/custom_purchase_order_views.xml",
-        "data/custom_purchase_email_template.xml"
+        "data/custom_purchase_email_template.xml",
+        "views/select_bid_wizard_views.xml",
+        "views/vendor_bid_views.xml",
+        "security/ir.model.access.csv"
     ],
     "installable": True,
     "application": True,

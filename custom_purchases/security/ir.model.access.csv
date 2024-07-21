@@ -1,2 +1,4 @@
 id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
-custom_purchases.access_custom_purchase_order,access_custom_purchase_order,custom_purchases.model_custom_purchase_order,base.group_user,1,1,1,1
+custom_purchases.access_vendor_bid,access_vendor_bid,custom_purchases.model_vendor_bid,base.group_user,1,1,1,1
+custom_purchases.access_vendor_bid_line,access_vendor_bid_line,custom_purchases.model_vendor_bid_line,base.group_user,1,1,1,1
+custom_purchases.access_select_bid_wizard,access_select_bid_wizard,custom_purchases.model_select_bid_wizard,base.group_user,1,1,1,1

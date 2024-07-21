@@ -6,15 +6,24 @@
         <field name="model">purchase.order</field>
         <field name="inherit_id" ref="purchase.purchase_order_form"/>
         <field name="arch" type="xml">
+            <xpath expr="//header" position="inside">
+                <button name="action_add_bids" string="Add Bids" type="object" invisible="state != 'sent'" class="oe_highlight"/>
+                <button name="action_view_bids" string="View Bids" type="object" invisible="state != 'bid_selection'"/>
+                <button name="action_select_bid" string="Select Bid" type="object" invisible="state != 'bid_selection'"/>
+            </xpath>
             <xpath expr="//field[@name='partner_id']" position="after">
-                <field name="vendor_ids" widget="many2many_tags" options="{'no_create': True}" context="{'res_partner_search_mode': 'supplier', 'show_vat': True}" placeholder="Name, TIN, Email, or Reference" readonly="state in ['cancel', 'done', 'purchase']" invisible="state in ('sent','done','to approve')"/>
+                <field name="vendor_ids" widget="many2many_tags" options="{'no_create': False}" context="{'res_partner_search_mode': 'supplier', 'show_vat': True}" placeholder="Name, TIN, Email, or Reference" readonly="state in ['cancel', 'done', 'purchase']" invisible="state in ('sent','done','to approve')"/>
             </xpath>
             <xpath expr="//field[@name='partner_id']" position="attributes">
                 <attribute name="invisible">1</attribute>
             </xpath>
             <xpath expr="//field[@name='partner_id']" position="after">
-                <field name="best_bid_vendor_id" widget="res_partner_many2one" options="{'no_create': True, 'no_open': True}" domain="[('id', 'in', vendor_ids)]" invisible="state in ('draft', 'purchase', 'cancel')"/>
+                <field name="selected_bid_id" readonly="1" invisible="state not in ('bid_selection','purchase', 'done')"/>
             </xpath>
+            <xpath expr="//button[@name='button_confirm'][@id='bid_confirm']" position="attributes">
+                <attribute name="invisible">state != 'bid_selection'</attribute>
+            </xpath>
+           
 
         </field>
     </record>

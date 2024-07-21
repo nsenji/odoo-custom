@@ -1,8 +1,8 @@
 from odoo import models, fields
-from odoo.exceptions import UserError, ValidationError
+from odoo.exceptions import UserError
 from odoo import api, fields, models, _
 
-from odoo.exceptions import UserError, ValidationError
+from odoo.exceptions import UserError
 
 
 class CustomPurchaseOrder(models.Model):
@@ -16,26 +16,30 @@ class CustomPurchaseOrder(models.Model):
         tracking=True,
         check_company=True,
     )
+   
+    vendor_bid_ids = fields.One2many('vendor.bid', 'purchase_order_id', string='Vendor Bids')
+    selected_bid_id = fields.Many2one('vendor.bid', string='Selected Bid')
+    state = fields.Selection(selection_add=[('bid_selection', 'Bid Selection')])
 
-    best_bid_vendor_id = fields.Many2one(
-        "res.partner",
-        string="Vendor Best Bid",
-        tracking=True,
-        check_company=True,
-        domain=[("supplier_rank", ">", 0)],
-    )
-
-    @api.onchange("best_bid_vendor_id")
-    def _onchange_best_bid_vendor_id(self):
-        if self.best_bid_vendor_id:
-            self.partner_id = self.best_bid_vendor_id.id
-            self.vendor_ids = [(6, 0, [self.best_bid_vendor_id.id])]
+    
 
     def button_confirm(self):
-        if not self.best_bid_vendor_id:
-            raise UserError(_("Please select vendor with the best bid"))
-
-        super().button_confirm()
+        if not self.selected_bid_id:
+            raise UserError("Please select the best bid first")
+        
+        for order in self:
+            if order.state not in ["draft", "sent", "bid_selection"]:
+                continue
+            order.order_line._validate_analytic_distribution()
+            order._add_supplier_to_product()
+            # Deal with double validation process
+            if order._approval_allowed():
+                order.button_approve()
+            else:
+                order.write({"state": "to approve"})
+            if order.partner_id not in order.message_partner_ids:
+                order.message_subscribe([order.partner_id.id])
+        return True
 
     @api.onchange("vendor_ids")
     def onchange_vendor_ids(self):
@@ -120,3 +124,32 @@ class CustomPurchaseOrder(models.Model):
             "target": "new",
             "context": ctx,
         }
+        
+        
+    def action_add_bids(self):
+        self.ensure_one()
+        if not self.vendor_ids:
+            raise UserError("Please select vendors before requesting bids.")
+        self.write({'state': 'bid_selection'})
+
+    def action_view_bids(self):
+        self.ensure_one()
+        return {
+            'name': 'Vendor Bids',
+            'type': 'ir.actions.act_window',
+            'res_model': 'vendor.bid',
+            'view_mode': 'tree,form',
+            'domain': [('purchase_order_id', '=', self.id)],
+            'context': {'default_purchase_order_id': self.id},
+        }
+
+    def action_select_bid(self):
+        self.ensure_one()
+        return {
+            'name': 'Select Bid',
+            'type': 'ir.actions.act_window',
+            'res_model': 'select.bid.wizard',
+            'view_mode': 'form',
+            'target': 'new',
+            'context': {'default_purchase_order_id': self.id},
+        }    

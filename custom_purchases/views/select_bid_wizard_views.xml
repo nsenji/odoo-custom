@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_select_bid_wizard_form" model="ir.ui.view">
+        <field name="name">select.bid.wizard.form</field>
+        <field name="model">select.bid.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Select Bid">
+                <group>
+                    <field name="purchase_order_id" invisible="1"/>
+                    <field name="bid_id" domain="[('purchase_order_id', '=', purchase_order_id)]"/>
+                </group>
+                <footer>
+                    <button name="action_select_bid" string="Select" type="object" class="btn-primary"/>
+                    <button string="Cancel" class="btn-secondary" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+</odoo>

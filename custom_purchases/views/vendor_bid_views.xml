@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_vendor_bid_tree" model="ir.ui.view">
+        <field name="name">vendor.bid.tree</field>
+        <field name="model">vendor.bid</field>
+        <field name="arch" type="xml">
+            <tree string="Vendor Bids" decoration-success="state == 'selected'" decoration-danger="state == 'rejected'">
+                <field name="purchase_order_id"/>
+                <field name="vendor_id"/>
+                <field name="bid_date"/>
+                <field name="total_amount"/>
+                <field name="currency_id"/>
+                <field name="state"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="view_vendor_bid_form" model="ir.ui.view">
+        <field name="name">vendor.bid.form</field>
+        <field name="model">vendor.bid</field>
+        <field name="arch" type="xml">
+            <form string="Vendor Bid">
+                <header>
+                    <button name="action_submit_bid" string="Done" type="object" class="oe_highlight" />
+                    <field name="state" widget="statusbar"/>
+                </header>
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="purchase_order_id"/>
+                            <field name="vendor_id"/>
+                            <field name="bid_date"/>
+                        </group>
+                        <group>
+                            <field name="total_amount"/>
+                            <field name="currency_id"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Bid Lines">
+                            <field name="line_ids">
+                                <tree editable="bottom">
+                                    <field name="product_id"/>
+                                    <field name="description"/>
+                                    <field name="quantity"/>
+                                    <field name="price_unit"/>
+                                    <field name="price_subtotal"/>
+                                </tree>
+                            </field>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- Action for Vendor Bids -->
+    <record id="action_vendor_bid" model="ir.actions.act_window">
+        <field name="name">Vendor Bids</field>
+        <field name="res_model">vendor.bid</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+    <!-- Menu item for Vendor Bids -->
+    <menuitem id="menu_vendor_bid" name="Vendor Bids" action="action_vendor_bid" parent="purchase.menu_procurement_management" sequence="20"/>
+</odoo>
