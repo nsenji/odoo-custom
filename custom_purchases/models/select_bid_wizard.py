@@ -10,7 +10,7 @@ class SelectBidWizard(models.TransientModel):
     def action_select_bid(self):
         self.ensure_one()
         self.purchase_order_id.write({
-            'selected_bid_id': self.bid_id.id,
+            'selected_bid_id': self.bid_id.vendor_id.id,
             'partner_id': self.bid_id.vendor_id.id,
         })
         self.bid_id.write({'state': 'selected'})

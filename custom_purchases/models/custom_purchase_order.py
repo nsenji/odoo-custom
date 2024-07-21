@@ -18,7 +18,7 @@ class CustomPurchaseOrder(models.Model):
     )
    
     vendor_bid_ids = fields.One2many('vendor.bid', 'purchase_order_id', string='Vendor Bids')
-    selected_bid_id = fields.Many2one('vendor.bid', string='Selected Bid')
+    selected_bid_id = fields.Many2one('res.partner', string='Best Bid')
     state = fields.Selection(selection_add=[('bid_selection', 'Bid Selection')])
 
     

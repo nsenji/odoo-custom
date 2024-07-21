@@ -8,7 +8,7 @@
         <field name="arch" type="xml">
             <xpath expr="//header" position="inside">
                 <button name="action_add_bids" string="Add Bids" type="object" invisible="state != 'sent'" class="oe_highlight"/>
-                <button name="action_view_bids" string="View Bids" type="object" invisible="state != 'bid_selection'"/>
+                <button name="action_view_bids" string="View Bids" type="object" invisible="state not in ('bid_selection','purchase','done')"/>
                 <button name="action_select_bid" string="Select Bid" type="object" invisible="state != 'bid_selection'"/>
             </xpath>
             <xpath expr="//field[@name='partner_id']" position="after">
@@ -23,8 +23,6 @@
             <xpath expr="//button[@name='button_confirm'][@id='bid_confirm']" position="attributes">
                 <attribute name="invisible">state != 'bid_selection'</attribute>
             </xpath>
-           
-
         </field>
     </record>
 
@@ -35,6 +33,9 @@
         <field name="arch" type="xml">
             <xpath expr="//field[@name='partner_id']" position="replace">
                 <field name="vendor_ids" widget="many2many_tags"/>
+            </xpath>
+            <xpath expr="//field[@name='vendor_ids']" position="after">
+                <field name="selected_bid_id"/>
             </xpath>
         </field>
     </record>

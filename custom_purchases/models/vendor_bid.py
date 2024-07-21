@@ -18,6 +18,8 @@ class VendorBid(models.Model):
         ('rejected', 'Rejected')
     ], string='Status', default='draft')
     line_ids = fields.One2many('vendor.bid.line', 'bid_id', string='Bid Lines')
+    
+   
 
     @api.depends('line_ids.price_subtotal')
     def _compute_total_amount(self):
