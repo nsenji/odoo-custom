@@ -22,7 +22,6 @@
         <field name="model">purchase.request</field>
         <field name="arch" type="xml">
             <tree string="Purchase Requests" decoration-info="state == 'draft'" decoration-muted="state == 'rejected'" decoration-success="state == 'approved'" create="1">
-                <field name="name"/>
                 <field name="requester_id"/>
                 <field name="department_id"/>
                 <field name="date_request"/>
@@ -41,9 +40,9 @@
             <form string="Purchase Request">
                 <header>
                     <button name="action_make_request" string="Request" type="object" class="oe_highlight" invisible="state != 'draft'" />
-                    <button name="action_approve" string="Approve" type="object" class="oe_highlight" invisible="state != 'sent'"/>
-                    <button name="action_reject" string="Reject" type="object" invisible="state != 'sent'"/>
-                    <button name="action_create_rfq" string="Create RFQ" type="object" invisible="state != 'approved'"/>
+                    <button name="action_approve" string="Approve" type="object" class="oe_highlight" invisible="state != 'sent'" groups="purchase.group_purchase_user,purchase.group_purchase_manager"/>
+                    <button name="action_reject" string="Reject" type="object" invisible="state != 'sent'" groups="purchase.group_purchase_user,purchase.group_purchase_manager"/>
+                    <button name="action_create_rfq" string="Create RFQ" type="object" invisible="state != 'approved'" groups="purchase.group_purchase_user,purchase.group_purchase_manager"/>
                     <field name="state" widget="statusbar" statusbar_visible="draft,sent,approved,rfq_created" readonly="1"/>
                 </header>
                 <sheet>

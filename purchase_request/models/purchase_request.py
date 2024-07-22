@@ -67,10 +67,6 @@ class PurchaseRequest(models.Model):
 
     @api.model
     def create(self, vals):
-        if vals.get("name", "New") == "New":
-            vals["name"] = (
-                self.env["ir.sequence"].next_by_code("purchase.request") or "New"
-            )
         record = super().create(vals)
         record.message_subscribe([record.requester_id.partner_id.id])
         return record
@@ -138,7 +134,6 @@ class PurchaseRequest(models.Model):
 
         self.write({'state': 'rfq_created'})
 
-        # Return an action to view the created purchase order
         return {
             'name': 'Created RFQ',
             'type': 'ir.actions.act_window',
